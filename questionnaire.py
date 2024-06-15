@@ -1,4 +1,4 @@
-
+# 2 eme version code avec POO
 class Question:
     def __init__(self, titre, choix, bonne_reponse):
         self.titre = titre
@@ -50,6 +50,17 @@ class Questionnaire:
         print("Score final :", score, "sur", len(self.questions))
 
 
+Questionnaire(
+    (
+        Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
+        Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
+        Question("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
+        # on peut alimenter nos data (questions) ici sans modifier le code partout plus pratique
+    )
+).lancer_questionnaire()
+
+
+
 """questions = (
     Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
     Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
@@ -66,118 +77,56 @@ q = Question.FromData(data)
 """
 
 
-Questionnaire(
-    (
-        Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
-        Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-        Question("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-        # on peut alimenter nos data (questions) ici sans modifier le code partout plus pratique
-    )
-).lancer_questionnaire()
-
-
-
-
-# __________Reflexion _________POO pr definir les entitées
+#____1ere version code ______
 """
-class Questions: (entitées)
-    __init__(self, titre, questions, bonne_reponse) => min, max
-    #__ Données :
-        - titre, questions (bonne_reponse), bonne_reponse(choix)
+def reponse_numerique(min, max):
+    choix_str = input("Quel est votre reponse ? entre " + str(min) + " et " + str(max) + " ")
+    try:
+        choix_int = int(choix_str)
+        if min <= choix_int <= max:
+            return choix_int
+        print("vous devez entrer un nombre entre " + str(min) + " et " + str(max))
+    except:
+        print("vous devez entrer une valeur numerique")
+    return reponse_numerique(min, max)
 
-    #__ Actions (methodes)
-        - poser_et_afficher_question(self):
-            print(titre)
-            bonne_reponse = self.questions[2]
-            for i in self.questions:
-            print(i)
-            reponse_user = input() # Question.demander_reponse_numerique()
+def poser_question(question):
+    bonne_reponse = question[2]
+    choix_reponse = question[1]
+    print(" ", "QUESTIONS")
+    print(question[0])
+    #print(question[1])
+    for i in range(len(choix_reponse)):
+        print(str(i+1), " - ", str(choix_reponse[i]))
 
-            return True or False (Pourquoi pas)
+    reponse_correcte = False
+    choix_int = reponse_numerique(1, len(choix_reponse))
+    if choix_reponse[choix_int-1].lower() == bonne_reponse.lower():
+        print("reponse correcte")
+        reponse_correcte = True
+    else:
+        print("reonse incorrecte")
 
-        - demander_reponse_numerique(self) # gestion d'erreure et recuperation de choix utilisateur
-            - (POURQUOI pas une variable d'instance ici)
-             reponse_user = input(self.min, self.max)
+    return reponse_correcte
+    print()
 
-             return something...
 
-             
-class Questionnaire(Questions): (Nouvelle entitée => Herite de Questions)
-    def __init__(self):
-        super().__ini__()
-    def lancer_questionnaire():
-        score = 0
-        if super().poser_et_afficher_question(): == True:
+def afficher_questiionnaire(questionnaire):
+    score = 0
+    for question in questionnaire:
+        if poser_question(question):
             score += 1
-            => reponse bonne
-        print(result de.....score )
+    print("votre score", score)
 
-question1 = Questions(
-    ("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
-)
-q = Questionnaire(question1)
-q.lancer_questionnaire()
 
-"""
-# ____Mise en pratique de notre reflexions avec quelques modifications par rapport à notre reflexion ___
-"""class Question:
-    def __init__(self, titre, choix, bonne_reponse):
-        self.titre = titre
-        self.choix = choix
-        self.bonne_reponse = bonne_reponse
-    
-    # Autre façon avec la methode de calsse => impressionant
-    #def FromData(data):
-       # q = Question(data[2], data[0], data[1])
-        #return q
-    
-    def poser_question(self):
-        print("Titre ", self.titre)
-        for i in range(len(self.choix)):
-            print(f" {i + 1} - {self.choix[i]} " )
 
-        choix_user = Question.demander_reponse_numerique(1, len(self.choix))
-        a = False
-        if self.choix[choix_user - 1] == self.bonne_reponse:
-            print("Bonne réponse")
-            a = True
-        else: 
-            print("Mauvaise réponse")
-        return a
-    
-    def demander_reponse_numerique(min, max): # methode de class/statique (on a pas besoin du self ici)
-        choix_utilisateur_str = input("Votre choix entre " + str(min) + " et " + str(max) + " " )
-        try:
-            choix_utilisateur_int = int(choix_utilisateur_str)
-        except:
-            print("ERREUR : Vous devez entrer une valeur numérique")
-            return Question.demander_reponse_numerique(min, max)
-        
-        if not (min <= choix_utilisateur_int <= max):
-                print("ERREUR : Vous devez entrer un nombre entre ", min, "et" , max)
-                return Question.demander_reponse_numerique(min, max)
-        return choix_utilisateur_int
 
-class Questionnaire: 
-    def __init__(self, questionnaire):
-         self.questionnaire = questionnaire
+question1 = ("Quelle est la capitale de l'Italie ?", ("Venise", "Pise", "Florence", "Rome", "Lille"), "Rome")
+question2 = ("Quelle est la capitale de la France ?", ("Venise", "Pise", "Florence", "Paris", "Lille"), "Paris")
 
-    def lancer_questionnaire(self):
-         score = 0
-         for question in self.questionnaire:
-            if question.poser_question(): # on peut appeler la fonction ou methode d'une classe ici (poser_question de de Question)
-                score += 1
-         print(f"Votre score : {score}")
-        
+questionnaire = (question1, question2)
+afficher_questiionnaire(questionnaire)"""
 
-question1 = Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris")
-question2 = Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris")
 
-# question1.poser_question() 
-questions = (
-    Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
-    Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"),
-)   
 
-questionnaire = Questionnaire(questions)
-questionnaire.lancer_questionnaire() """
+
